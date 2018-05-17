@@ -1,0 +1,25 @@
+{
+  "name": "@northern/redux-collection.js",
+  "version": "0.0.1",
+  "description": "An easy to use Redux Collection library",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/northern/redux-collection.js.git"
+  },
+  "keywords": [
+    "redux",
+    "collection",
+    "library"
+  ],
+  "author": "northern",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/northern/redux-collection.js/issues"
+  },
+  "homepage": "https://github.com/northern/redux-collection.js#readme",
+  "dependencies": {
+    "@northern/api-client.js": "^0.0.1"
+  }
+}
