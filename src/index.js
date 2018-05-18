@@ -5,12 +5,8 @@ export default class Collection {
     this.context = context;
   }
 
-  getEndpoint() {
-    return `/${this.context}`;
-  }
-
-  getParamsFromQuery(query) {
-    const params = []; //
+  getQueryFromParams(query) {
+    const params = [];
 
     Object.keys(query).map((key) => {
       if (query[key] !== undefined) {
@@ -40,9 +36,24 @@ export default class Collection {
   }
 
   /**
+   * Returns the full path of a path than contains parameters specified in params.
+   *
+   * @param {String} A string representing a path that contains colon prefixed parameters.
+   * @param {Object} An object to which the key/value pairs are replaced in the path.
+   * @return {String}
+   */
+  getPath(path, params) {
+    Object.keys(params).map(key => {
+      path = path.replace(`:${key}`, params[key]);
+    });
+
+    return path;
+  }
+
+  /**
    * return {Promise}
    */
-  fetchOne(id, forceLoad = false, endpoint = this.getEndpoint()) {
+  fetchOne(path, id, forceLoad = false) {
     return (dispatch, getState) => {
       dispatch(this.fetchRequest());
 
@@ -61,7 +72,7 @@ export default class Collection {
         });
       }
       else {
-        return this.api.get(`${endpoint}/${id}`)
+        return this.api.get(this.getPath(path, {id}))
           .then(data => {
             dispatch(this.fetchResponse(data));
 
@@ -77,10 +88,10 @@ export default class Collection {
 
   /**
    * @param {Array} ids An array containing the ids of the objects to retrieve.
-   * @param {Object} query The query parameters; "offset", "limit", "key" & "sort".
+   * @param {Object} params The params "offset", "limit", "key" & "sort".
    * @return {Promise}
    */
-  fetchMany(ids, query = {}, forceReload = false, endpoint = this.getEndpoint()) {
+  fetchMany(path, ids, params = {}, forceReload = false) {
     return (dispatch, getState) => {
       dispatch(this.fetchRequest());
 
@@ -99,9 +110,9 @@ export default class Collection {
         });        
       }
       else {
-        const params = this.getParamsFromQuery(query);
+        const query = this.getQueryFromParams(params);
 
-        return this.api.get(`${endpoint}/${ids.join('+')}${params.length ? '?'+params.join('&') : ''}`)
+        return this.api.get(this.getPath(path, {ids:`${ids.join('+')}${query.length ? '?'+query.join('&') : ''}`}))
           .then(data => {
             dispatch(this.fetchResponse(data));
 
@@ -116,16 +127,16 @@ export default class Collection {
   }
 
   /**
-   * @param {Object} query The query parameters; "offset", "limit", "key" & "sort"
+   * @param {Object} params The params parameters; "offset", "limit", "key" & "sort"
    * @return {Promise}
    */
-  fetchAll(query = {}, endpoint = this.getEndpoint()) {
+  fetchAll(path, params = {}) {
     return (dispatch, getState) => {
       dispatch(this.fetchRequest());
 
-      const params = this.getParamsFromQuery(query);
+      const query = this.getQueryFromParams(params);
 
-      return this.api.get(`${endpoint}${params.length ? '?'+params.join('&') : ''}`)
+      return this.api.get(`${path}${query.length ? '?'+query.join('&') : ''}`)
         .then(data => {
           dispatch(this.fetchResponse(data));
 
@@ -141,11 +152,11 @@ export default class Collection {
   /**
    * @return {Promise}
    */
-  create(data, endpoint = this.getEndpoint()) {
+  create(path, data) {
     return (dispatch, getState) => {
       dispatch(this.updateRequest());
 
-      return this.api.post(`${endpoint}`, JSON.stringify(data))
+      return this.api.post(path, JSON.stringify(data))
         .then(data => {
           dispatch(this.createResponse(data));
 
@@ -163,11 +174,11 @@ export default class Collection {
   /**
    * @return {Promise}
    */
-  update(id, data, endpoint = this.getEndpoint()) {
+  update(path, id, data) {
     return (dispatch, getState) => {
       dispatch(this.updateRequest());
 
-      return this.api.put(`${endpoint}/${id}`, JSON.stringify(data))
+      return this.api.put(this.getPath(path, {id}), JSON.stringify(data))
         .then(data => {
           dispatch(this.updateResponse(data));
 
