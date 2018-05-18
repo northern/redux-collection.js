@@ -16,15 +16,15 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@northern/api-client.js@*":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@northern/api-client.js/-/api-client.js-0.0.1.tgz#45f37d7afeee977993ea29efa6e4868c33b79284"
+"@northern/api-client@*":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@northern/api-client/-/api-client-0.0.4.tgz#8bcb6cadc93c7f88e893c086d177243f141ec4e2"
   dependencies:
-    "@northern/http.js" "^0.0.1"
+    "@northern/http" "*"
 
-"@northern/http.js@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@northern/http.js/-/http.js-0.0.1.tgz#e45a16cf5643e214e00007cda349dcd6faa41083"
+"@northern/http@*":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@northern/http/-/http-0.0.4.tgz#edf76f52f5d544f3ea6c0f2576c9df803c2231ef"
 
 abab@^1.0.4:
   version "1.0.4"
