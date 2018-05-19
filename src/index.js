@@ -192,4 +192,26 @@ export default class Collection {
       ;
     }
   }
+
+  /**
+   * @return {Promise}
+   */
+  delete(path, id) {
+    return (dispatch, getState) => {
+      dispatch(this.deleteRequest());
+
+      return this.api.delete(this.getPath(path, {id}))
+        .then(data => {
+          dispatch(this.deleteResponse(data));
+
+          return data;
+        })
+        .catch(data => {
+          dispatch(this.deleteError(data));
+
+          return data;
+        })
+      ;
+    }
+  }
 }
