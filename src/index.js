@@ -207,9 +207,9 @@ export default class Collection {
           return id;
         })
         .catch(data => {
-          dispatch(this.deleteError(id));
+          dispatch(this.deleteError(data));
 
-          return id;
+          return data;
         })
       ;
     }

@@ -1,6 +1,6 @@
 {
   "name": "@northern/redux-collection",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "An easy to use Redux Collection library",
   "main": "lib/index.js",
   "scripts": {
