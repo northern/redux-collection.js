@@ -154,7 +154,7 @@ export default class Collection {
    */
   create(path, data) {
     return (dispatch, getState) => {
-      dispatch(this.updateRequest());
+      dispatch(this.createRequest());
 
       return this.api.post(path, JSON.stringify(data))
         .then(data => {
@@ -202,14 +202,14 @@ export default class Collection {
 
       return this.api.delete(this.getPath(path, {id}))
         .then(data => {
-          dispatch(this.deleteResponse(data));
+          dispatch(this.deleteResponse(id));
 
-          return data;
+          return id;
         })
         .catch(data => {
-          dispatch(this.deleteError(data));
+          dispatch(this.deleteError(id));
 
-          return data;
+          return id;
         })
       ;
     }
