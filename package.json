@@ -1,6 +1,6 @@
 {
   "name": "@northern/redux-collection",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "An easy to use Redux Collection library",
   "main": "lib/index.js",
   "scripts": {
@@ -29,10 +29,14 @@
     ]
   },
   "jest": {
-    "modulePathIgnorePatterns": ["node_mdules", "lib"]
+    "modulePathIgnorePatterns": [
+      "node_mdules",
+      "lib"
+    ]
   },
   "dependencies": {
-    "@northern/api-client": "*"
+    "@northern/api-client": "*",
+    "@northern/util": "*"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

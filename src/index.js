@@ -1,53 +1,134 @@
 
+import {
+  replaceParams,
+  toQueryParams
+} from '@northern/util';
+
 export default class Collection {
-  constructor(api, context) {
-    this.api = api;
+
+  /**
+   * @param {@northern/ApiClient} An ApiClient instance.
+   * @param {String} A string specifying the context of this collection (e.g. 'users').
+   */
+  constructor(apiClient, context) {
+    this.apiClient = apiClient;
     this.context = context;
   }
 
-  getQueryFromParams(query) {
-    const params = [];
-
-    Object.keys(query).map((key) => {
-      if (query[key] !== undefined) {
-        params.push(`${key}=${query[key]}`)
-      }
-    });
-
-    return params;
+  /**
+   * Should return the fetch request Redux action.
+   *
+   * @return {Object}
+   */
+  fetchRequest() {
+    throw new Error("Implement fetchRequest method.");
   }
 
   /**
-   * Takes a collection and a list of Ids and returns a list of Ids that are not
-   * currently present in the collection.
+   * Should return the fetch response Redux action.
    *
-   * @param {Object} collection An object containing elements indexed by object id.
-   * @param {Array} ids A list of Ids.
-   * @return {Array}
+   * @param {Object} Object containing the response data.
+   * @return {Object}
    */
-  getIdsToFetch(collection, ids) {
-    if (!ids) {
-      ids = [];
-    }
-
-    return ids.filter((id) => {
-      return !collection[id];
-    });
+  fetchResponse(data) {
+    throw new Error("Implement fetchResponse method.");
   }
 
   /**
-   * Returns the full path of a path than contains parameters specified in params.
+   * Should return the fetch error Redux action.
    *
-   * @param {String} A string representing a path that contains colon prefixed parameters.
-   * @param {Object} An object to which the key/value pairs are replaced in the path.
-   * @return {String}
+   * @param {Object} Object containing the response error data.
+   * @return {Object}
    */
-  getPath(path, params) {
-    Object.keys(params).map(key => {
-      path = path.replace(`:${key}`, params[key]);
-    });
+  fetchError(data) {
+    throw new Error("Implement fetchError method.");
+  }
 
-    return path;
+  /**
+   * Should return the create request Redux action.
+   *
+   * @return {Object}
+   */
+  createRequest() {
+    throw new Error("Implement createRequest method.");
+  }
+
+  /**
+   * Should return the create response Redux action.
+   *
+   * @param {Object} Object containing the response data.
+   * @return {Object}
+   */
+  createResponse(data) {
+    throw new Error("Implement createResponse method.");
+  }
+
+  /**
+   * Should return the create error Redux action.
+   *
+   * @param {Object} Object containing the response error data.
+   * @return {Object}
+   */
+  createError(error) {
+    throw new Error("Implement createError method.");
+  }
+
+  /**
+   * Should return the update request Redux action.
+   *
+   * @return {Object}
+   */
+  updateRequest() {
+    throw new Error("Implement updateRequest method.");
+  }
+
+  /**
+   * Should return the update response Redux action.
+   *
+   * @param {Object} Object containing the response data.
+   * @return {Object}
+   */
+  updateResponse(data) {
+    throw new Error("Implement updateResponse method.");
+  }
+
+  /**
+   * Should return the update error Redux action.
+   *
+   * @param {Object} Object containing the response error data.
+   * @return {Object}
+   */
+  updateError(error) {
+    throw new Error("Implement updateError method.");
+  }
+
+  /**
+   * Should return the delete request Redux action.
+   *
+   * @return {Object}
+   */
+  deleteRequest() {
+    throw new Error("Implement deleteRequest method.");
+  }
+
+  /**
+   * Should return the delete response Redux action.
+   *
+   * @param {Object} Object containing the response data.
+   * @return {Object}
+   */
+  deleteResponse(id) {
+    throw new Error("Implement deleteResponse method.");
+  }
+
+  /**
+   * Should return the delete error Redux action.
+   *
+   * @param {Object} Object containing the response error data.
+   * @return {Object}
+   */
+  deleteError(data) {
+    throw new Error("Implement deleteError method.");
   }
 
   /**
@@ -72,7 +153,7 @@ export default class Collection {
         });
       }
       else {
-        return this.api.get(this.getPath(path, {id}))
+        return this.apiClient.get(replaceParams(path, {id}))
           .then(data => {
             dispatch(this.fetchResponse(data));
 
@@ -97,11 +178,14 @@ export default class Collection {
 
       const state = getState();
 
-      ids = this.getIdsToFetch(state.core[this.context], ids);
+      if (!forceReload) {
+        ids = ids.filter(id => {
+          return !state.core[this.context][id];
+        });
+      }
 
-      if (ids.length === 0 && forceReload === false) {
-        const data = {};
-        data[this.context] = [];
+      if (ids.length === 0 && !forceReload) {
+        const data = state.core[this.context];
 
         return new Promise((resolve, reject) => {
           dispatch(this.fetchResponse(data));
@@ -110,9 +194,9 @@ export default class Collection {
         });        
       }
       else {
-        const query = this.getQueryFromParams(params);
+        const query = toQueryParams(params);
 
-        return this.api.get(this.getPath(path, {ids:`${ids.join('+')}${query.length ? '?'+query.join('&') : ''}`}))
+        return this.apiClient.get(replaceParams(path, {ids:`${ids.join('+')}${query.length ? '?'+query.join('&') : ''}`}))
           .then(data => {
             dispatch(this.fetchResponse(data));
 
@@ -134,9 +218,9 @@ export default class Collection {
     return (dispatch, getState) => {
       dispatch(this.fetchRequest());
 
-      const query = this.getQueryFromParams(params);
+      const query = toQueryParams(params);
 
-      return this.api.get(`${path}${query.length ? '?'+query.join('&') : ''}`)
+      return this.apiClient.get(`${path}${query.length ? '?'+query.join('&') : ''}`)
         .then(data => {
           dispatch(this.fetchResponse(data));
 
@@ -156,7 +240,7 @@ export default class Collection {
     return (dispatch, getState) => {
       dispatch(this.createRequest());
 
-      return this.api.post(path, JSON.stringify(data))
+      return this.apiClient.post(path, JSON.stringify(data))
         .then(data => {
           dispatch(this.createResponse(data));
 
@@ -178,7 +262,7 @@ export default class Collection {
     return (dispatch, getState) => {
       dispatch(this.updateRequest());
 
-      return this.api.put(this.getPath(path, {id}), JSON.stringify(data))
+      return this.apiClient.put(replaceParams(path, {id}), JSON.stringify(data))
         .then(data => {
           dispatch(this.updateResponse(data));
 
@@ -200,7 +284,7 @@ export default class Collection {
     return (dispatch, getState) => {
       dispatch(this.deleteRequest());
 
-      return this.api.delete(this.getPath(path, {id}))
+      return this.apiClient.delete(replaceParams(path, {id}))
         .then(data => {
           dispatch(this.deleteResponse(id));
 

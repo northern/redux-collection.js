@@ -26,6 +26,10 @@
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@northern/http/-/http-0.0.4.tgz#edf76f52f5d544f3ea6c0f2576c9df803c2231ef"
 
+"@northern/util@*":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@northern/util/-/util-0.0.1.tgz#a5d2b1a44d16cfee7a1fdf6bac74b7f86964433c"
+
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
