@@ -160,7 +160,7 @@ export default class Collection {
             return data;
           })
           .catch(data => {
-            dispatch(this.fetchError(data.error));
+            dispatch(this.fetchError(data));
           })
         ;
       }
@@ -248,8 +248,6 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.createError(data));
-
-          return data;
         })
       ;
     }
@@ -270,8 +268,6 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.updateError(data));
-
-          return data;
         })
       ;
     }
@@ -292,8 +288,6 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.deleteError(data));
-
-          return data;
         })
       ;
     }
