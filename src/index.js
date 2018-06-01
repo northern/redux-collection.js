@@ -161,6 +161,8 @@ export default class Collection {
           })
           .catch(data => {
             dispatch(this.fetchError(data));
+
+            throw data;
           })
         ;
       }
@@ -204,6 +206,8 @@ export default class Collection {
           })
           .catch(data => {
             dispatch(this.fetchError(data));
+
+            throw data;
           })
         ;
       }
@@ -228,6 +232,8 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.fetchError(data));
+
+          throw data;
         })
       ;
     }
@@ -248,6 +254,8 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.createError(data));
+
+          throw data;
         })
       ;
     }
@@ -268,6 +276,8 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.updateError(data));
+
+          throw data;
         })
       ;
     }
@@ -288,6 +298,8 @@ export default class Collection {
         })
         .catch(data => {
           dispatch(this.deleteError(data));
+
+          throw data;
         })
       ;
     }
