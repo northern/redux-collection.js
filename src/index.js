@@ -6,6 +6,54 @@ import {
 
 export default class Collection {
 
+  static get FETCH_REQUEST() {
+    return `core.${context}.fetch.request`
+  }
+
+  static get FETCH_RESPONSE() {
+    return `core.${context}.fetch.response`
+  }
+
+  static get FETCH_ERROR() {
+    return `core.${context}.fetch.error`
+  }
+
+  static get CREATE_REQUEST() {
+    return `core.${context}.create.request`
+  }
+
+  static get CREATE_RESPONSE() {
+    return `core.${context}.create.response`
+  }
+
+  static get CREATE_ERROR() {
+    return `core.${context}.create.error`
+  }
+
+  static get UPDATE_REQUEST() {
+    return `core.${context}.update.request`
+  }
+
+  static get UPDATE_RESPONSE() {
+    return `core.${context}.update.response`
+  }
+
+  static get UPDATE_ERROR() {
+    return `core.${context}.update.error`
+  }
+
+  static get DELETE_REQUEST() {
+    return `core.${context}.delete.request`
+  }
+
+  static get DELETE_RESPONSE() {
+    return `core.${context}.delete.response`
+  }
+
+  static get DELETE_ERROR() {
+    return `core.${context}.delete.error`
+  }
+
   /**
    * @param {@northern/ApiClient} An ApiClient instance.
    * @param {String} A string specifying the context of this collection (e.g. 'users').
