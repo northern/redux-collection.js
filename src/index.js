@@ -143,21 +143,16 @@ export default class Collection {
       const one = state.core[this.context][id];
 
       if (one && !forceLoad) {
-        const data = {};
-        data[this.context] = [one];
-
         return new Promise((resolve) => {
-          dispatch(this.fetchResponse(data));
+          dispatch(this.fetchResponse());
 
-          resolve(data);
+          resolve();
         });
       }
       else {
         return this.apiClient.get(replaceParams(path, {id}))
           .then(data => {
             dispatch(this.fetchResponse(data));
-
-            return data;
           })
           .catch(data => {
             dispatch(this.fetchError(data));
@@ -181,19 +176,15 @@ export default class Collection {
       const state = getState();
 
       if (!forceReload) {
-        ids = ids.filter(id => {
-          return !state.core[this.context][id];
-        });
+        ids = ids.filter(id => !state.core[this.context][id])
       }
 
       if (ids.length === 0 && !forceReload) {
-        const data = state.core[this.context];
-
         return new Promise((resolve, reject) => {
-          dispatch(this.fetchResponse(data));
+          dispatch(this.fetchResponse());
 
-          resolve(data);
-        });        
+          resolve();
+        });
       }
       else {
         const query = toQueryParams(params);
@@ -201,8 +192,6 @@ export default class Collection {
         return this.apiClient.get(replaceParams(path, {ids:`${ids.join('+')}${query.length ? '?'+query.join('&') : ''}`}))
           .then(data => {
             dispatch(this.fetchResponse(data));
-
-            return data;
           })
           .catch(data => {
             dispatch(this.fetchError(data));
@@ -227,8 +216,6 @@ export default class Collection {
       return this.apiClient.get(`${path}${query.length ? '?'+query.join('&') : ''}`)
         .then(data => {
           dispatch(this.fetchResponse(data));
-
-          return data;
         })
         .catch(data => {
           dispatch(this.fetchError(data));
@@ -249,8 +236,6 @@ export default class Collection {
       return this.apiClient.post(path, JSON.stringify(data))
         .then(data => {
           dispatch(this.createResponse(data));
-
-          return data;
         })
         .catch(data => {
           dispatch(this.createError(data));
@@ -271,8 +256,6 @@ export default class Collection {
       return this.apiClient.put(replaceParams(path, {id}), JSON.stringify(data))
         .then(data => {
           dispatch(this.updateResponse(data));
-
-          return data;
         })
         .catch(data => {
           dispatch(this.updateError(data));
@@ -293,8 +276,6 @@ export default class Collection {
       return this.apiClient.delete(replaceParams(path, {id}))
         .then(data => {
           dispatch(this.deleteResponse(id));
-
-          return id;
         })
         .catch(data => {
           dispatch(this.deleteError(data));
